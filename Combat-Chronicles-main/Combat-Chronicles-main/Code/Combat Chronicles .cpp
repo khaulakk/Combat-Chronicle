@@ -2,12 +2,9 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
-#include<Windows.h>
-#pragma comment(lib, "winmm.lib")
 #include<iomanip>
-
-using namespace std;
-
+#include<windows.h>
+using namespace std;  
 struct Player
 {
     string name;
@@ -15,7 +12,7 @@ struct Player
     string inventory[5];
     string weapon;
     int health;
-    int level = 1;
+    int level ;
     int levelMax;
     int experiencePoints;
     int attack;
@@ -75,57 +72,71 @@ string input(string x)
 {
     while (true)
     {
-        if (cin.eof() && cin.fail())
+        if ( cin.fail())
         {
             cin.clear();
         }
-        else if (!cin.eof() && !cin.fail())
+        else if ( !cin.fail())
         {
             return x;
         }
     }
 }
-int Quit()
+void Quit()
 {
     cout << setw(50) << "GOODBYE" << endl;
-    return 0;
 }
-void initializePlayer(Player& player)
+
+void initializePlayer(Player& player) 
 {
     cout << "\n\n" << setw(60) << "CREATING PLAYER" << endl << endl << endl;
     cout << "Player Name: ";
-    while (true)
-    {
+
+    while (true) {
+        
         getline(cin, player.name);
         player.name = input(player.name);
+        player.name = getValidName(player.name);
         player.name = upperString(player.name);
-        getValidName(player.name);
-        if (player.name.length() > !3 && player.name.length() < !8)
+
+        if (player.name.empty() && !validateAlphaString(player.name)) 
         {
-            cout << "Length must between 3 to 8 characters.\nEnter name: ";
+            cout << "Invalid Input." << endl;
         }
-        else
+        else if (player.name.length() < 3 || player.name.length() > 8) 
         {
+            cout << "Length must be between 3 to 8 characters." << endl;
+        }
+        else 
+        {
+           player.name;
             break;
         }
+
+        cout << "Enter name: ";
     }
-    while (true)
+
+    while (true) 
     {
         cout << endl << setw(55) << "CLASSES";
-        cout << "\n\n*Warrior\n\n*Mage\n\n*Rogue" << endl;
+        cout << "\n\n* WARRIOR\n\n* MAGE\n\n* ROGUE" << endl;
         cout << "\nChoose your class: ";
+
+        
         getline(cin, player.playerClass);
         player.playerClass = input(player.playerClass);
-        player.playerClass = lowerString(player.playerClass);
-        if (player.playerClass == "warrior" || player.playerClass == "mage" || player.playerClass == "rogue")
+        player.playerClass = upperString(player.playerClass);
+        if (player.playerClass == "WARRIOR" || player.playerClass == "MAGE" || player.playerClass == "ROGUE") 
         {
-            break;
+           player.playerClass;
+           break;
         }
-        else
+        else 
         {
-            cout << "Invalid class" << endl;
+            cout << "\nInvalid class" << endl;
         }
     }
+
     player.experiencePoints = 0;
     player.level = 1;
     player.health = 100;
@@ -146,6 +157,11 @@ void EnemyInfo(Player& player, Enemy& enemy)
         cout << "Enemy: " << enemy.enemyName << endl;
         cout << "Enemy Health: " << enemy.enemyHealth << endl;
         cout << "Difficulty Level: " << enemy.difficultyLevel << endl;
+        cout << endl << endl;
+        Sleep(2000);
+        cout << "Your journey commences against Doctor, once a healer turned to dark arts." << endl;
+        cout << "He wields twisted magic, challenge him to begin your odyssey." << endl << endl;
+        
     }
     else if (player.level == 2)
     {
@@ -156,6 +172,13 @@ void EnemyInfo(Player& player, Enemy& enemy)
         cout << "Enemy: " << enemy.enemyName << endl;
         cout << "Enemy Health: " << enemy.enemyHealth << endl;
         cout << "Difficulty Level: " << enemy.difficultyLevel << endl;
+        Sleep(2000);
+        cout << endl << endl;
+        cout << "Level 1 - Enter the Arena:" << endl;
+        cout << "Your journey commences against Doctor, once a healer turned to dark arts." << endl;
+        cout << "He wields twisted magic, challenge him to begin your odyssey." << endl << endl;
+
+        
 
     }
     else if (player.level == 3)
@@ -167,6 +190,13 @@ void EnemyInfo(Player& player, Enemy& enemy)
         cout << "Enemy: " << enemy.enemyName << endl;
         cout << "Enemy Health: " << enemy.enemyHealth << endl;
         cout << "Difficulty Level: " << enemy.difficultyLevel << endl;
+        cout << endl << endl;
+        Sleep(2000);
+        cout << "Level 3 - Arcane Secrets:" << endl;
+        cout << "Anna, the sorceress wielding forbidden magic, stands guard in this realm." << endl;
+        cout << "Confront her arcane powers and surpass this mystical challenge." << endl << endl;
+
+        
     }
     else if (player.level == 4)
     {
@@ -177,6 +207,11 @@ void EnemyInfo(Player& player, Enemy& enemy)
         cout << "Enemy: " << enemy.enemyName << endl;
         cout << "Enemy Health: " << enemy.enemyHealth << endl;
         cout << "Difficulty Level: " << enemy.difficultyLevel << endl;
+        cout << endl << endl;
+        Sleep(2000);
+        cout << "Level 4 - Fortress of Strength:" << endl;
+        cout << "Carlo, the unyielding guardian of Andy's fortress, awaits your arrival." << endl;
+        cout << "Defeat his formidable strength and tactics to reach the final encounter." << endl << endl;
     }
     else if (player.level = player.levelMax)
     {
@@ -187,6 +222,11 @@ void EnemyInfo(Player& player, Enemy& enemy)
         cout << "Enemy: " << enemy.enemyName << endl;
         cout << "Enemy Health: " << enemy.enemyHealth << endl;
         cout << "Difficulty Level: " << enemy.difficultyLevel << endl;
+        cout << endl << endl;
+        Sleep(2000);
+        cout << "Final Showdown - Dark Sorcerer's Domain:" << endl;
+        cout << "Prepare for the ultimate confrontation against Andy, the malevolent sorcerer." << endl;
+        cout << "Unleash your valor to rewrite the Chronicles and claim victory!" << endl << endl;
     }
 }
 
@@ -265,10 +305,16 @@ int levelUp(Player& player)
         }
         player.health = 100; // Reset health on level up
         player.experiencePoints = 0; // Reset experience points
-
-        cout << "\nCongratulations! You've leveled up to Level " << player.level << "!" << endl;
-        return player.level;
-
+        if (player.level > player.levelMax)
+        {
+            Sleep(2000);
+            cout << "After Andy's defeat, the truth emerges: the trials were humanity's last stand against an imminent alien invasion. Each character's role in shaping the simulation becomes clear. With Andy's fall, a new chapter begins. United by purpose, they harness the simulation's power, preparing to confront the looming threat. Their mission: defend humanity, using the simulation's depths to ensure unity against the impending extraterrestrial onslaught." << endl << endl;
+        }
+        else
+        {
+            cout << "\nCongratulations! You've leveled up to Level " << player.level << "!" << endl;
+            return player.level;
+        }
     }
 }
 
@@ -405,6 +451,7 @@ void battle(Player& player, Enemy& enemy)
                             choice = lowerString(choice);
                             if (choice == "Y" || choice == "y")
                             {
+                                system("cls");
                                 Quit();
                             }
                             else if (choice == "n" || choice == "N")
@@ -467,25 +514,47 @@ void Controlls()
     cout << "press 9 for giving damage of health 27" << endl;
     cout << "press 0 for giving damage of health 30" << endl;
 }
+void StoryLine(Player & player)
+ {
+    cout << endl << endl << setw(70) << "Combat Chronicles: The Battle Begins" << endl << endl << endl;
+        cout << "In the realm of Valor, where tales of heroes echo through time," << endl;
+        cout << "the Combat Chronicles unveil legendary battles and untold bravery." << endl << endl;
 
-void StoryLine(Player& player)
-{
-    cout << setw(50) << "LEVEL 1" << endl << endl;
-    cout << setw(30) << "Player" << setw(18) << "V/S" << setw(30) << "DOCTOR" << endl;
-    cout << "\nPlayer Weapon: UMP-45 " << endl;
-    cout << "\n" << setw(50) << "LEVEL 2" << endl << endl;
-    cout << setw(30) << "PLayer" << setw(18) << "V/S" << setw(30) << "SARA" << endl;
-    cout << "\nPlayer Weapon: M416" << endl;
-    cout << "\n" << setw(50) << "LEVEL 3" << endl << endl;
-    cout << setw(30) << "Player" << setw(18) << "V/S" << setw(30) << "ANNA" << endl;
-    cout << "\nPlayer Weapon: AKM" << endl;
-    cout << "\n" << setw(50) << "LEVEL 4" << endl << endl;
-    cout << setw(30) << "Player" << setw(18) << "V/S" << setw(30) << "CARLO" << endl;
-    cout << "\nPlayer Weapon: AWM" << endl;
-    cout << "\n" << setw(50) << "LEVEL 5" << endl << endl;
-    cout << setw(30) << "player" << setw(18) << "V/S" << setw(30) << "ANDY" << endl;
-    cout << "\nPlayer Weapon: LMG " << endl;
-}
+        Sleep(3000);
+
+        cout << "Level 1 - Enter the Arena:" << endl;
+        cout << "Your journey commences against Doctor, once a healer turned to dark arts." << endl;
+        cout << "He wields twisted magic, challenge him to begin your odyssey." << endl << endl;
+
+        Sleep(3000);
+
+        cout << "Level 2 - Shadows of Deception:" << endl;
+        cout << "Sara, Andy's stealthy assassin, lurks in the shadows, waiting for a challenger." << endl;
+        cout << "Unveil her stealth and outwit her to continue your epic quest." << endl << endl;
+
+        Sleep(3000);
+
+        cout << "Level 3 - Arcane Secrets:" << endl;
+        cout << "Anna, the sorceress wielding forbidden magic, stands guard in this realm." << endl;
+        cout << "Confront her arcane powers and surpass this mystical challenge." << endl << endl;
+
+        Sleep(3000);
+
+        cout << "Level 4 - Fortress of Strength:" << endl;
+        cout << "Carlo, the unyielding guardian of Andy's fortress, awaits your arrival." << endl;
+        cout << "Defeat his formidable strength and tactics to reach the final encounter." << endl << endl;
+
+        Sleep(3000);
+
+        cout << "Final Showdown - Dark Sorcerer's Domain:" << endl;
+        cout << "Prepare for the ultimate confrontation against Andy, the malevolent sorcerer." << endl;
+        cout << "Unleash your valor to rewrite the Chronicles and claim victory!" << endl << endl;
+
+        Sleep(3000);
+
+        cout << "Embark on this legendary journey, rewrite the Chronicles of Combat, and emerge as the hero of Valor!" << endl << endl;
+ }
+
 void End(Player& player, Enemy& enemy)
 {
     displayPlayerInfo(player);
@@ -497,7 +566,6 @@ void End(Player& player, Enemy& enemy)
 
 int main()
 {
-    PlaySound(TEXT("back.wav"), NULL, SND_ASYNC);
     Player player;
     Enemy enemy;
     string ch;
@@ -527,7 +595,7 @@ jump:
                 choice = input(choice);
                 choice = lowerString(choice);
             } while (choice != "y");
-            true;
+            
             main();
             break;
         }
@@ -546,7 +614,7 @@ jump:
             choice = lowerString(choice);
             while (true)
             {
-                if (choice == "y" || choice == "Y")
+                if (choice == "y" )
                 {
                     system("cls");
                     string c;
